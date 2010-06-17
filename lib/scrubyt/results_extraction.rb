@@ -157,7 +157,8 @@ module Scrubyt
             child_extractor_options = options.merge(:body => element.to_s,
                                                     :detail => true, 
                                                     :parent_url => previous_url,
-                                                     :first_child => options[:parent])
+                                                    :first_child => options[:parent],
+                                                    :cookies => @agent.cookie_jar.to_a)
             result = { result_name => Extractor.new(child_extractor_options, &block).results }
             notify(:save_results, name, result) if first_child?
             result
@@ -170,9 +171,10 @@ module Scrubyt
               options[:json] = args.detect{|h| h.has_key?(:json)}[:json].to_json if args.detect{|h| h.has_key?(:json)}
               element_body = is_simple_match ? element.children.to_s : element.to_s
               child_extractor_options = options.merge(:body => element_body,
-                                                       :detail => true, 
-                                                       :parent_url => previous_url,
-                                                       :first_child => options[:parent])
+                                                      :detail => true,
+                                                      :parent_url => previous_url,
+                                                      :first_child => options[:parent],
+                                                      :cookies => @agent.cookie_jar.to_a)
               result = { result_name => Extractor.new(child_extractor_options, &block).results }
               notify(:save_results, name, result) if first_child?
               result

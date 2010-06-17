@@ -66,7 +66,8 @@ module Scrubyt
           options.delete(:hash)
           options[:json] = args.detect{|h| h.has_key?(:json)}[:json].to_json if args.detect{|h| h.has_key?(:json)}
           child_extractor_options = options.merge(:url => full_url, 
-                                                   :detail => true)
+                                                  :detail => true,
+                                                  :cookies => @agent.cookie_jar.to_a)
           child_extractor_options.delete(:fetch_page)
           detail_result = Extractor.new(child_extractor_options, &block).results
           if should_return_result?(detail_result, all_required)

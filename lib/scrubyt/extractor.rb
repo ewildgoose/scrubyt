@@ -171,6 +171,7 @@ module Scrubyt
           notify(:setup_agent)
           require "mechanize"
           @agent = Mechanize.new
+          load_agent_cookies_a(@options[:cookies]) if @options[:cookies] && !@options[:cookies].empty?
         end
         ## TODO: Clearer distinction between requesting url and processing body for detail
         if @options[:url]
@@ -179,7 +180,23 @@ module Scrubyt
           @parsed_doc = Nokogiri::HTML.parse(@options[:body])
         end
       end
-      
+
+      # Load cookie array into "cookie_jar"
+      # Should perhaps be moved into the Mechanize namespace
+      # and perhaps submitted upstream?
+      #   class Mechanize
+      #     class CookieJar
+      # Takes an array of Mechanize::Cookie objects as input
+      def load_agent_cookies_a(cookies)
+        now = Time.now
+        fakeuri = Struct.new(:host)    # add_cookie wants something resembling a URI.
+
+        cookies.each do |cookie|
+          next if cookie.expires && (cookie.expires != 0) && (cookie.expires < now)
+          @agent.cookie_jar.add(fakeuri.new(cookie.domain), cookie.dup)
+        end
+      end
+
       def clear_current_result!
         @current_result = nil
       end
