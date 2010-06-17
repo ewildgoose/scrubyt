@@ -170,7 +170,7 @@ module Scrubyt
         when :standard
           notify(:setup_agent)
           require "mechanize"
-          @agent = WWW::Mechanize.new
+          @agent = Mechanize.new
         end
         ## TODO: Clearer distinction between requesting url and processing body for detail
         if @options[:url]

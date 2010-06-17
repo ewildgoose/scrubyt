@@ -13,7 +13,7 @@ module Scrubyt
         notify(:fetch, full_url)
         @agent_doc = @agent.get(full_url)
         store_url_helpers(@agent_doc.uri.to_s)
-      rescue WWW::Mechanize::ResponseCodeError => err
+      rescue Mechanize::ResponseCodeError => err
       rescue Errno::ETIMEDOUT
       rescue EOFError
       rescue SocketError
